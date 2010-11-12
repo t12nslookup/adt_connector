@@ -17,6 +17,8 @@ Ruby ADT is a small fast library for reading Advantage Database Server database 
 ## Installation
   
     gem install ruby-adt
+
+This will install activesupport > 2.1, which might install an [unsupported] rails 3 version!  Use the 2.3.x version of activesupport.
   
 ## Basic Usage
 
@@ -92,6 +94,7 @@ An example of migrating a DBF book table to ActiveRecord using a migration:
   
 * ADT is read-only
 * External index files are not used
+* ActiveSupport 3+ is not supported, use 2.3.x
 
 ## Acknowledgements 
 
