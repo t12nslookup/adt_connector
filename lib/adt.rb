@@ -14,9 +14,8 @@ else
  require 'fastercsv'
 end
 
-require 'adt/globals'
-require 'adt/record'
-require 'adt/column'
-require 'adt/table'
 
-
+require File.join(File.dirname(__FILE__), "adt", "globals.rb")
+require File.join(File.dirname(__FILE__), "adt", "record.rb")
+require File.join(File.dirname(__FILE__), "adt", "column.rb")
+require File.join(File.dirname(__FILE__), "adt", "table.rb")
