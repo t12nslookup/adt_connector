@@ -30,6 +30,18 @@ module ADT
       columns.map { |column| @attributes[column.name.underscore] }
     end
     
+    # Maps a row to an array of values, formatted for Microsoft Access
+    # Remove single quotes
+    #
+    # @return [Array]
+    def to_msacc
+      columns.map do |column| 
+        val = @attributes[column.name.underscore]
+        val = val.gsub("'", "") if val.respond_to?(:gsub) 
+        "'#{val}'"
+      end.join(',')
+    end
+    
     private
     
     # Defined attribute accessor methods
