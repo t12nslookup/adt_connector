@@ -87,5 +87,9 @@ module ADT
     
 	    s.gsub(/[^\x20-\x7E]/,"")
 	  end
+	  
+	  def to_msacc
+	    "[#{name}]"
+	  end
 	end
 end
