@@ -48,11 +48,11 @@ module ADT
     def initialize_values
       #skip the first 5 bytes, don't know what they are for and they don't contain the data.
       @data.read(5)
-      
+
       @attributes = columns.inject({}) do |hash, column|
-        
         #get the unpack flag to get this data.
-        value = @data.read(column.length).unpack("#{column.flag(column.type, column.length)}").first
+        dataread = @data.read(column.length)
+        value = dataread.nil? ? '' : dataread.unpack("#{column.flag(column.type, column.length)}").first
         hash[column.name] = value
         hash[column.name.underscore] = value
       
