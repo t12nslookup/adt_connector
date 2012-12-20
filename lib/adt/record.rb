@@ -30,7 +30,7 @@ module ADT
     #
     # @return [Array]
     def to_a
-      columns.map { |column| @attributes[column.name.underscore] }
+      columns.map { |column| @attributes[column.name.downcase.gsub(/\s+/,"_")] }
     end
     
     private
@@ -38,10 +38,10 @@ module ADT
     # Defined attribute accessor methods
     def define_accessors
       columns.each do |column|
-        underscored_column_name = column.name.underscore
+        underscored_column_name = column.name.downcase.gsub(/\s+/,"_")
         unless respond_to?(underscored_column_name)
           self.class.send :define_method, underscored_column_name do
-            @attributes[column.name.underscore]
+            @attributes[column.name.downcase.gsub(/\s+/,"_")]
           end
         end
       end
@@ -57,7 +57,7 @@ module ADT
         #get the unpack flag to get this data.
         value = @data.read(column.length).unpack("#{column.flag(column.type, column.length)}").first
         hash[column.name] = value
-        hash[column.name.underscore] = value
+        hash[column.name.downcase.gsub(/\s+/,"_")] = value
       
         hash
       end

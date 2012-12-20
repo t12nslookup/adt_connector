@@ -194,7 +194,7 @@ module ADT
     # @param [Hash] options
     # @return [Boolean]
     def all_values_match?(record, options)
-      options.all? {|key, value| record.attributes[key.to_s.underscore] == value}
+      options.all? {|key, value| record.attributes[key.to_s.downcase.gsub(/\s+/,"_")] == value}
     end
     
     

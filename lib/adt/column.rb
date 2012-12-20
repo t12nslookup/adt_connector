@@ -48,7 +48,7 @@ module ADT
 	  #
 	  # @return [String]
 	  def schema_definition
-	    "\"#{name.underscore}\", #{schema_data_type}\n"
+	    "\"#{name.downcase.gsub(/\s+/,"_")}\", #{schema_data_type}\n"
 	  end
   
 	  # Column type for schema definition
