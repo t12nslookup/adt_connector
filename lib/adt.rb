@@ -1,3 +1,5 @@
+require "adt/version"
+
 require 'rubygems'
 require 'date'
 require 'active_support/all'
@@ -18,5 +20,3 @@ require 'adt/globals'
 require 'adt/record'
 require 'adt/column'
 require 'adt/table'
-
-
