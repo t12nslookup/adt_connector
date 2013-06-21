@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'date'
-require 'active_support'
+require 'active_support/all'
 
 if RUBY_VERSION > '1.9'
  require 'csv'
