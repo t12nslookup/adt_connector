@@ -8,14 +8,18 @@ module ADT
     attr_reader :options # The options hash used to initialize the table
     attr_reader :data # ADT file handle
     attr_reader :record_count # Total number of records
+    attr_accessor :encode_to    
+    attr_accessor :undescore_columns
     
     # Opens a ADT:Table
     # Example:
     # table = ADT::Table.new 'data.adt'
     #
     # @param [String] path Path to the adt file
-    def initialize(path)
+    def initialize(path, encoding=nil, undescore=true)
       @data = File.open(path, 'rb')
+      self.encode_to = encoding
+      self.undescore_columns = undescore
       reload!
     end
     
@@ -61,8 +65,7 @@ module ADT
     end
     
     alias_method :row, :record
-    
-    
+      
     # Generate an ActiveRecord::Schema
     #
     # xBase data types are converted to generic types as follows:
@@ -89,7 +92,7 @@ module ADT
       s = "ActiveRecord::Schema.define do\n"
       s << " create_table \"#{File.basename(@data.path, ".*")}\" do |t|\n"
       columns.each do |column|
-        s << " t.column #{column.schema_definition}"
+        s << "   t.column #{column.schema_definition}"
       end
       s << " end\nend"
       
@@ -230,7 +233,7 @@ module ADT
       @column_count.times do
         name, type, length = @data.read(200).unpack('A128 x S x4 S')
         if length > 0
-          @columns << Column.new(name.strip, type, length)
+          @columns << Column.new(name.strip, type, length, self.undescore_columns)
         end
       end
       # Reset the column count in case any were skipped
