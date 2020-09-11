@@ -3,7 +3,10 @@ module ADT
   class Record
     attr_reader :attributes
     
-    delegate :columns, :to => :@table
+    def columns
+      @table.columns
+    end
+    #delegate :columns, :to => :@table
     
     # Initialize a new ADT::Record
     #
