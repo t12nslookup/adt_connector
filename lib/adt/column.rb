@@ -8,7 +8,7 @@ module ADT
 
 	class Column
 	  attr_reader :name, :type, :length
-  
+
 	  # Initialize a new ADT::Column
 	  #
 	  # @param [String] name
@@ -16,7 +16,7 @@ module ADT
 	  # @param [Fixnum] length
 	  def initialize(name, type, length, undescorize)
 	    @name, @type, @length, @undescorize = strip_non_ascii_chars(name), type, length, undescorize
-    
+
 	    raise ColumnLengthError, "field length must be greater than 0" unless length > 0
 	    raise ColumnNameError, "column name cannot be empty" if @name.length == 0
 	  end
@@ -33,7 +33,7 @@ module ADT
       end
       return flag
     end
- 
+
 	  # Decode a DateTime value
 	  #
 	  # @param [String] value
@@ -43,18 +43,18 @@ module ADT
 	    seconds = milliseconds / 1000
 	    DateTime.jd(days, seconds/3600, seconds/60 % 60, seconds % 60) rescue nil
 	  end
-  
+
     def external_name
       @undescorize ? self.name.underscore : self.name
     end
-    
+
 	  # Schema definition
 	  #
 	  # @return [String]
 	  def schema_definition
 	    "\"#{self.external_name}\", #{schema_data_type}\n"
 	  end
-  
+
 	  # Column type for schema definition
 	  #
 	  # @return [String]
@@ -80,7 +80,7 @@ module ADT
 	      ":string, :limit => #{length}"
 	    end
 	  end
-  
+
 	  # Strip all non-ascii and non-printable characters
 	  #
 	  # @param [String] s
@@ -88,8 +88,12 @@ module ADT
 	  def strip_non_ascii_chars(s)
 	    # truncate the string at the first null character
 	    s = s[0, s.index("\x00")] if s.index("\x00")
-    
+
 	    s.gsub(/[^\x20-\x7E]/,"")
+	  end
+
+	  def to_msacc
+	    "[#{name}]"
 	  end
 	end
 end

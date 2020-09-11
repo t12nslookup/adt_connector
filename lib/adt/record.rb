@@ -2,22 +2,22 @@ module ADT
   # An instance of ADT::Record represents a row in the ADT file
   class Record
     attr_reader :attributes
-    
+
     def columns
       @table.columns
     end
     #delegate :columns, :to => :@table
-    
+
     # Initialize a new ADT::Record
     #
     # @param [ADT::Table] table
     def initialize(table)
       @table, @data = table, table.data
-      
+
       initialize_values
       define_accessors
     end
-    
+
     # Equality
     #
     # @param [ADT::Record] other
@@ -25,16 +25,28 @@ module ADT
     def ==(other)
       other.respond_to?(:attributes) && other.attributes == attributes
     end
-    
+
     # Maps a row to an array of values
     #
     # @return [Array]
     def to_a
       columns.map { |column| @attributes[column.external_name] }
     end
-    
+
+    # Maps a row to an array of values, formatted for Microsoft Access
+    # Remove single quotes
+    #
+    # @return [Array]
+    def to_msacc
+      columns.map do |column|
+        val = @attributes[column.name.underscore]
+        val = val.gsub("'", "") if val.respond_to?(:gsub)
+        "'#{val}'"
+      end.join(',')
+    end
+
     private
-    
+
     # Defined attribute accessor methods
     def define_accessors
       columns.each do |column|
@@ -46,25 +58,23 @@ module ADT
         end
       end
     end
-    
+
     # Initialize values for a row
     def initialize_values
       #skip the first 5 bytes, don't know what they are for and they don't contain the data.
       @data.read(5)
-      
+
       @attributes = columns.inject({}) do |hash, column|
-        
         #get the unpack flag to get this data.
-        value = @data.read(column.length).unpack("#{column.flag(column.type, column.length)}").first
+        dataread = @data.read(column.length)
+        value = dataread.nil? ? '' : dataread.unpack("#{column.flag(column.type, column.length)}").first
         value.force_encoding(@table.encode_to) if @table.encode_to && value && value.present?
 
         hash[column.name] = value
         hash[column.external_name] = value
-      
+
         hash
       end
     end
-    
-    
   end
 end
